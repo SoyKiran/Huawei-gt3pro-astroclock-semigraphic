@@ -2,7 +2,7 @@
 
 A semigraphic astrology app for **Huawei GT 3 Pro / liteWearable**, built with HarmonyOS JavaScript UI in DevEco Studio.
 
-![Semigraphic AstroClock on Huawei GT 3 Pro](screenshot.jpeg)
+<img width="360" height="512" alt="screenshotr" src="https://github.com/user-attachments/assets/98e39db6-88ac-49b9-a953-400800684ab4" />
 
 ## Development requirements
 
