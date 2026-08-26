@@ -1182,24 +1182,6 @@ export default {
         angles[1];
 
 
-        /* ============================= */
-        /* VIA COMBUSTA - ASC OR MOON */
-        /* ============================= */
-
-        if (
-            (ascendant >= 195.0 && ascendant <= 225.0) ||
-            (moonLon >= 195.0 && moonLon <= 225.0)
-        ) {
-
-            this.bodyColor =
-            "#ff3333";
-
-        } else {
-
-            this.bodyColor =
-            "#ffd633";
-        }
-
 
         /* ============================= */
         /* EARTH */
@@ -1263,6 +1245,25 @@ export default {
 
         var moonLon =
         calMoon(T);
+
+
+        /* ============================= */
+        /* VIA COMBUSTA - ASC OR MOON */
+        /* ============================= */
+
+        if (
+            (ascendant >= 195.0 && ascendant <= 225.0) ||
+            (moonLon >= 195.0 && moonLon <= 225.0)
+        ) {
+
+            this.bodyColor =
+            "#ff3333";
+
+        } else {
+
+            this.bodyColor =
+            "#ffd633";
+        }
 
 
         var merLon =
@@ -1562,7 +1563,7 @@ export default {
 
         putBody(
             moonLon,
-            "MOON",
+            "MON",
             true
         );
 
@@ -1625,7 +1626,7 @@ export default {
 
         putBody(
             nodeLon,
-            "NODE",
+            "NND",
             true
         );
 
