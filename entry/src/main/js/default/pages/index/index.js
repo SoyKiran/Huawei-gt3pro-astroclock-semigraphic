@@ -1183,12 +1183,12 @@ export default {
 
 
         /* ============================= */
-        /* VIA COMBUSTA */
+        /* VIA COMBUSTA - ASC OR MOON */
         /* ============================= */
 
         if (
-            ascendant >= 195.0 &&
-            ascendant <= 225.0
+            (ascendant >= 195.0 && ascendant <= 225.0) ||
+            (moonLon >= 195.0 && moonLon <= 225.0)
         ) {
 
             this.bodyColor =
