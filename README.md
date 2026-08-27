@@ -31,7 +31,7 @@ A semigraphic astrology app for **Huawei GT 3 Pro / liteWearable**, built with H
   - Water: blue
 - `*` marker when more than one displayed body/point occupies the same sign; ASC and MC are included in this count
 - Scrollable per-sign body lists for signs containing multiple bodies
-- Via Combusta highlighting for ASC from 15° Libra through 15° Scorpio, inclusive
+- Via Combusta highlighting for ASC and Moon from 15° Libra through 15° Scorpio, inclusive
 
 ## Location permission
 
