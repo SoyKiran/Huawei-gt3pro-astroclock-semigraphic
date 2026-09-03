@@ -640,12 +640,25 @@ export default {
         false;
 
         this.statusText =
-        "Searching GPS...";
+        "Loading saved GPS...";
 
-        this.getDeviceLocation();
+        var self =
+            this;
+
+        /*
+         * Önce son kayıtlı konumu kullan.
+         * Kayıt yoksa Ankara hemen gösterilir.
+         * İlk ekran hazır olduktan sonra GPS arka planda aranır.
+         */
+        this.useLastLocation(
+            function () {
+                self.getDeviceLocation();
+            }
+        );
     },
 
     onDestroy() {
+
         try {
             brightness.setKeepScreenOn({
                 keepScreenOn: false
@@ -655,40 +668,13 @@ export default {
 
 
     /* ============================= */
-    /* GPS */
+    /* GPS - BACKGROUND UPDATE */
     /* ============================= */
 
     getDeviceLocation() {
 
         var self =
             this;
-
-        var finished =
-            false;
-
-
-        var timer =
-        setTimeout(
-            function () {
-
-                if (
-                    finished
-                ) {
-                    return;
-                }
-
-                finished =
-                true;
-
-                self.statusText =
-                "Searching saved GPS...";
-
-                self.useLastLocation();
-
-            },
-            10000
-        );
-
 
         try {
 
@@ -697,19 +683,6 @@ export default {
                 typeof geolocation.getLocation !==
                 "function"
             ) {
-
-                clearTimeout(
-                    timer
-                );
-
-                finished =
-                true;
-
-                self.statusText =
-                "Searching saved GPS...";
-
-                self.useLastLocation();
-
                 return;
             }
 
@@ -719,13 +692,6 @@ export default {
                 success:
                 function (data) {
 
-                    if (
-                        finished
-                    ) {
-                        return;
-                    }
-
-
                     try {
 
                         if (
@@ -733,10 +699,7 @@ export default {
                             data.latitude === undefined ||
                             data.longitude === undefined
                         ) {
-
-                            throw new Error(
-                                "Invalid Location"
-                            );
+                            return;
                         }
 
 
@@ -756,19 +719,8 @@ export default {
                             isNaN(lat) ||
                             isNaN(lon)
                         ) {
-
-                            throw new Error(
-                                "Location NaN"
-                            );
+                            return;
                         }
-
-
-                        finished =
-                        true;
-
-                        clearTimeout(
-                            timer
-                        );
 
 
                         self.statusText =
@@ -788,48 +740,12 @@ export default {
 
                     }
                     catch (e) {
-
-                        if (
-                            !finished
-                        ) {
-
-                            finished =
-                            true;
-
-                            clearTimeout(
-                                timer
-                            );
-
-                            self.statusText =
-                            "Searching saved GPS...";
-
-                            self.useLastLocation();
-                        }
                     }
                 },
 
 
                 fail:
                 function () {
-
-                    if (
-                        finished
-                    ) {
-                        return;
-                    }
-
-
-                    finished =
-                    true;
-
-                    clearTimeout(
-                        timer
-                    );
-
-                    self.statusText =
-                    "Searching saved GPS...";
-
-                    self.useLastLocation();
                 },
 
 
@@ -840,23 +756,6 @@ export default {
 
         }
         catch (e) {
-
-            if (
-                !finished
-            ) {
-
-                finished =
-                true;
-
-                clearTimeout(
-                    timer
-                );
-
-                self.statusText =
-                "Searching saved GPS...";
-
-                self.useLastLocation();
-            }
         }
     },
 
@@ -917,10 +816,28 @@ export default {
     /* LAST SAVED LOCATION */
     /* ============================= */
 
-    useLastLocation() {
+    useLastLocation(
+        onReady
+    ) {
 
         var self =
             this;
+
+
+        function ready() {
+
+            if (
+                typeof onReady ===
+                "function"
+            ) {
+
+                try {
+                    onReady();
+                }
+                catch (e) {
+                }
+            }
+        }
 
 
         try {
@@ -944,7 +861,9 @@ export default {
                     isNaN(savedLat)
                     ) {
 
-                        self.useFallbackLocation();
+                        self.useFallbackLocation(
+                            ready
+                        );
 
                         return;
                     }
@@ -969,7 +888,9 @@ export default {
                             isNaN(savedLon)
                             ) {
 
-                                self.useFallbackLocation();
+                                self.useFallbackLocation(
+                                    ready
+                                );
 
                                 return;
                             }
@@ -983,13 +904,18 @@ export default {
                                 savedLat,
                                 savedLon
                             );
+
+
+                            ready();
                         },
 
 
                         fail:
                         function () {
 
-                            self.useFallbackLocation();
+                            self.useFallbackLocation(
+                                ready
+                            );
                         }
                     });
                 },
@@ -998,14 +924,18 @@ export default {
                 fail:
                 function () {
 
-                    self.useFallbackLocation();
+                    self.useFallbackLocation(
+                        ready
+                    );
                 }
             });
 
         }
         catch (e) {
 
-            self.useFallbackLocation();
+            self.useFallbackLocation(
+                ready
+            );
         }
     },
 
@@ -1014,7 +944,9 @@ export default {
     /* ANKARA FALLBACK */
     /* ============================= */
 
-    useFallbackLocation() {
+    useFallbackLocation(
+        onReady
+    ) {
 
         this.statusText =
         "Using Ankara...";
@@ -1024,6 +956,19 @@ export default {
             39.9334,
             32.8597
         );
+
+
+        if (
+            typeof onReady ===
+            "function"
+        ) {
+
+            try {
+                onReady();
+            }
+            catch (e) {
+            }
+        }
     },
 
 
